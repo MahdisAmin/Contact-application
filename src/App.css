@@ -11,14 +11,15 @@ button {
   margin-left: 10px;
 }
 .container{
-  width: 100%;
+  /* width: 90%; */
   margin: 0 auto;
-  background-color: white;
+  /* margin-top: 5px; */
+  background-color: #0197F6;
   padding: 30px;
-   min-height: 600px;
-  background-image: url(./images/bg.jpg);
+   min-height: 100vh;
+  background-image: url(./images/bg.png);
   background-repeat: no-repeat;
-  background-position: center;
+  background-position:center;
 }
 .header{
   display: flex;

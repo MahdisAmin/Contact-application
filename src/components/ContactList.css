@@ -4,29 +4,35 @@
   margin: 40px;
      display: grid;
      grid-template-columns: repeat(auto-fill,minmax(350px,1fr));
-     gap: 55px;
-    
+     gap: 50px;
+    text-align: center;
 }
 .contact-item li{
     margin: 5px;
    border-radius: 1rem;
-   
- 
+   color: #68C5DB;
+  font-size: 1.2rem;
+    font-weight: bold;
+
 }
 .contact-list{
-    background-color: rgba(119, 119, 219, 0.979);
+    background-color: #02182B;
     padding: 20px;
     border-radius: 1.5rem;
     height: 220px;
      box-shadow: 0 0 10px rgb(119, 117, 117);
     width: 400px;
     margin: 5px;
-
-
 }
 .contact-item button{
-    width: 50px;
- border-radius: 50%;
+    width: 100px;  
+    background-origin: 1rem;
+}
+.edit-btn{
+    background-color: #448FA3;
+}
+.delete-btn{
+    background-color: #D7263D;
 }
 ul{
     list-style: none;
@@ -36,6 +42,7 @@ ul{
 .user-avatar{
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 .avatar{
     width: 40px;
