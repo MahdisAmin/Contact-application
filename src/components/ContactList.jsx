@@ -18,6 +18,7 @@ function ContactList({
             {isDeleteMode && (
               <input
                 type="checkbox"
+                className={`checkbox ${isDeleteMode}? 'show' : ""`}
                 checked={selectedContacts.includes(contact.id)}
                 onChange={() => handleCheckboxChange(contact.id)}
               />
