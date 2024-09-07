@@ -1,53 +1,55 @@
-.contact-item{
-    /* margin: auto; */
-    margin-top: 20px;
-  margin: 40px;
-     display: grid;
-     grid-template-columns: repeat(auto-fill,minmax(350px,1fr));
-     gap: 50px;
-    text-align: center;
+.contact-item {
+  /* margin: auto; */
+  list-style: none;
+  width: 100%;
+  text-align: center;
+  margin: 30px 5px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, 420px);
 }
-.contact-item li{
-    margin: 5px;
-   border-radius: 1rem;
-   color: #68C5DB;
+.contact-item li {
+  margin: 5px;
+  border-radius: 1rem;
+  color: #68c5db;
   font-size: 1.2rem;
-    font-weight: bold;
+  font-weight: bold;
+}
+.contact-list {
+  background-color: rgba(1, 1, 2, 0.8);
+  padding: 20px;
+  border-radius: 1.5rem;
+  height: 220px;
+  box-shadow: 0 0 10px #02182b;
+  /* width: 300px; */
+  margin: 5px 30px;
+  position: relative;
+}
+.checkbox{
+position: absolute;
+box-shadow: none;
+top: -20px;
 
 }
-.contact-list{
-    background-color: #02182B;
-    padding: 20px;
-    border-radius: 1.5rem;
-    height: 220px;
-     box-shadow: 0 0 10px rgb(119, 117, 117);
-    width: 400px;
-    margin: 5px;
+.contact-item button {
+  width: 100px;
+  background-origin: 1rem;
 }
-.contact-item button{
-    width: 100px;  
-    background-origin: 1rem;
+.edit-btn {
+  background-color: #448fa3;
 }
-.edit-btn{
-    background-color: #448FA3;
+.delete-btn {
+  background-color: #d7263d;
 }
-.delete-btn{
-    background-color: #D7263D;
-}
-ul{
-    list-style: none;
-    padding: 10px;
-    
-}
-.user-avatar{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.avatar{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 5px;
 
+.user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 5px;
 }

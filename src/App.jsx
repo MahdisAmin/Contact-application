@@ -6,18 +6,22 @@ import "./App.css";
 
 function App() {
   const [contacts, setContacts] = useState(() => {
-    const savedContact = localStorage.getItem('contacts');
-    return savedContact ?JSON.parse(savedContact):[]
+    const savedContact = localStorage.getItem("contacts");
+    return savedContact ? JSON.parse(savedContact) : [];
   });
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentContact, setCurrentContact] = useState(null);
   const [contactToDelete, setContactToDelete] = useState([]);
- 
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [selectedContacts, setSelectedContacts] = useState([]);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+
   useEffect(() => {
     localStorage.setItem("contacts", JSON.stringify(contacts));
-  },[contacts]);
+  }, [contacts]);
 
   const addContact = (contact) => {
     setContacts([...contacts, contact]);
@@ -42,6 +46,31 @@ function App() {
     setIsDeleteModalOpen(true);
   };
 
+  const toggleDeleteMode = () => {
+    if (isDeleteMode) {
+      setIsConfirmModalOpen(true);
+    } else {
+      setIsDeleteMode(true);
+    }
+  };
+
+  const confirmDeleteSelected = () => {
+    setContacts(
+      contacts.filter((contact) => !selectedContacts.includes(contact.id))
+    );
+    setSelectedContacts([]);
+    setIsDeleteMode(false);
+    setIsConfirmModalOpen(false);
+  };
+
+  const handleCheckboxChange = (id) => {
+    setSelectedContacts((prev) =>
+      prev.includes(id)
+        ? prev.filter((contactId) => contactId !== id)
+        : [...prev, id]
+    );
+  };
+
   const filteredContacts = contacts.filter(
     (contact) =>
       contact.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -61,6 +90,12 @@ function App() {
         >
           Add Contact
         </button>
+        {contacts.length > 0 && (
+          <button onClick={toggleDeleteMode}>
+            {isDeleteMode ? "Delete Selected" : "Delete All"}
+          </button>
+        )}
+
         {isEditModalOpen && (
           <div className="modal">
             <div className="modal-content">
@@ -76,34 +111,49 @@ function App() {
             </div>
           </div>
         )}
-        </div>
-        {isDeleteModalOpen && contactToDelete && (
-          <div className="modal">
-            <div className="modal-content">
-              <span
-                className="close"
-                onClick={() => setIsDeleteModalOpen(false)}
-              >
-                ×
-              </span>
-              <p>
-                Are you sure you want to delete {contactToDelete.firstName}{" "}
-                {contactToDelete.lastName}?
-              </p>
-              <button onClick={() => deleteContact(contactToDelete.id)}>
-                Yes
-              </button>
-              <button onClick={() => setIsDeleteModalOpen(false)}>No</button>
-            </div>
-          </div>
-        )}
-        <ContactList
-          contacts={filteredContacts}
-          setCurrentContact={setCurrentContact}
-          deleteContact={confirmDelete}
-          openEditModal={() => setIsEditModalOpen(true)}
-        />
       </div>
+      {isDeleteModalOpen && contactToDelete && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setIsDeleteModalOpen(false)}>
+              ×
+            </span>
+            <p>
+              Are you sure you want to delete {contactToDelete.firstName}{" "}
+              {contactToDelete.lastName}?
+            </p>
+            <button onClick={() => deleteContact(contactToDelete.id)}>
+              Yes
+            </button>
+            <button onClick={() => setIsDeleteModalOpen(false)}>No</button>
+          </div>
+        </div>
+      )}
+      {isConfirmModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span
+              className="close"
+              onClick={() => setIsConfirmModalOpen(false)}
+            >
+              ×
+            </span>
+            <p>Are you sure you want to delete the selected contacts?</p>
+            <button onClick={confirmDeleteSelected}>Yes</button>
+            <button onClick={() => setIsConfirmModalOpen(false)}>No</button>
+          </div>
+        </div>
+      )}
+      <ContactList
+        contacts={filteredContacts}
+        setCurrentContact={setCurrentContact}
+        deleteContact={confirmDelete}
+        openEditModal={() => setIsEditModalOpen(true)}
+        isDeleteMode={isDeleteMode}
+        selectedContacts={selectedContacts}
+        handleCheckboxChange={handleCheckboxChange}
+      />
+    </div>
   );
 }
 

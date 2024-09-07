@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import "./ContactForm.css"
+import "./ContactForm.css";
+
 function ContactForm({
   addContact,
   updateContact,
   currentContact,
   closeModal,
+  showCheckbox,
 }) {
   const [contact, setContact] = useState({
     firstName: "",
@@ -13,6 +15,7 @@ function ContactForm({
     email: "",
     photo: null,
   });
+
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -26,20 +29,17 @@ function ContactForm({
     setContact({ ...contact, [name]: value });
   };
 
-  // const handleFileChange = (e) => {
-  //   setContact({ ...contact, photo: URL.createObjectURL(e.target.files[0]) });
-  // };
-
   const fileChangeHandler = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
-      setContact({ ...contact, photo: reader.result })
+      setContact({ ...contact, photo: reader.result });
     };
     if (file) {
-      reader.readAsDataURL(file)
+      reader.readAsDataURL(file);
     }
-  }
+  };
+
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
@@ -108,6 +108,15 @@ function ContactForm({
         onChange={handleChange}
       />
       <input type="file" name="photo" onChange={fileChangeHandler} />
+      {showCheckbox && (
+        <input
+          type="checkbox"
+          checked={contact.checked || false}
+          onChange={(e) =>
+            setContact({ ...contact, checked: e.target.checked })
+          }
+        />
+      )}
       <button type="submit">
         {currentContact ? "Update Contact" : "Add Contact"}
       </button>

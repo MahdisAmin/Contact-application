@@ -1,18 +1,27 @@
 import React from "react";
 import "./ContactList.css";
+
 function ContactList({
   contacts,
   setCurrentContact,
   deleteContact,
   openEditModal,
+  isDeleteMode,
+  selectedContacts,
+  handleCheckboxChange,
 }) {
   return (
     <ul className="contact-item">
       {contacts.map((contact) => (
-        // <li key={contact.id}>
-        <div className="contact-list">
-          <li className="user-avatar">
-            {/* <li key={contact.id}> */}
+        <li key={contact.id}>
+          <div className="contact-list">
+            {isDeleteMode && (
+              <input
+                type="checkbox"
+                checked={selectedContacts.includes(contact.id)}
+                onChange={() => handleCheckboxChange(contact.id)}
+              />
+            )}
             {contact.photo && (
               <img
                 className="avatar"
@@ -20,35 +29,28 @@ function ContactList({
                 alt={`${contact.firstName} ${contact.lastName}`}
               />
             )}
-            {/* </li> */}
             {contact.firstName} {contact.lastName}
-          </li>
-          <li>
-            {contact.phone}
-          </li>
-          <li>
-            {contact.email}
-          </li>
-
-          <div className="contact-actions">
-            <button
-              className="Edit-btn"
-              onClick={() => {
-                setCurrentContact(contact);
-                openEditModal();
-              }}
-            >
-              Edit
-            </button>
-            <button
-              className="delete-btn"
-              onClick={() => deleteContact(contact)}
-            >
-              Delete{" "}
-            </button>
+            <div>{contact.phone}</div>
+            <div>{contact.email}</div>
+            <div className="contact-actions">
+              <button
+                className="Edit-btn"
+                onClick={() => {
+                  setCurrentContact(contact);
+                  openEditModal();
+                }}
+              >
+                Edit
+              </button>
+              <button
+                className="delete-btn"
+                onClick={() => deleteContact(contact)}
+              >
+                Delete
+              </button>
+            </div>
           </div>
-        </div>
-        // </li>
+        </li>
       ))}
     </ul>
   );
