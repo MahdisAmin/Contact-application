@@ -75,7 +75,7 @@ function App() {
     (contact) =>
       contact.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       contact.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.email.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+      contact.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
