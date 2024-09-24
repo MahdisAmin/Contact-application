@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 import ContactForm from "./components/ContactForm";
 import ContactList from "./components/ContactList";
 import SearchBar from "./components/SearchBar";
+import { ContactProvider, useContacts } from "./components/ContactContext";
 import "./App.css";
 
 function App() {
-  const [contacts, setContacts] = useState(() => {
-    const savedContact = localStorage.getItem("contacts");
-    return savedContact ? JSON.parse(savedContact) : [];
-  });
-
+  const { contacts, dispatch } = useContacts();
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
