@@ -6,7 +6,6 @@ function ContactForm({
   updateContact,
   currentContact,
   closeModal,
-  showCheckbox,
 }) {
   const [contact, setContact] = useState({
     firstName: "",
@@ -14,8 +13,8 @@ function ContactForm({
     phone: "",
     email: "",
     photo: null,
+    checked: false,
   });
-
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -71,6 +70,7 @@ function ContactForm({
       phone: "",
       email: "",
       photo: null,
+      checked: false,
     });
     setError("");
     closeModal();
@@ -108,15 +108,6 @@ function ContactForm({
         onChange={handleChange}
       />
       <input type="file" name="photo" onChange={fileChangeHandler} />
-      {showCheckbox && (
-        <input
-          type="checkbox"
-          checked={contact.checked || false}
-          onChange={(e) =>
-            setContact({ ...contact, checked: e.target.checked })
-          }
-        />
-      )}
       <button type="submit">
         {currentContact ? "Update Contact" : "Add Contact"}
       </button>

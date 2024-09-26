@@ -6,8 +6,7 @@ function ContactList({
   setCurrentContact,
   deleteContact,
   openEditModal,
-  isDeleteMode,
-  selectedContacts,
+  showCheckboxes,
   handleCheckboxChange,
 }) {
   return (
@@ -15,22 +14,23 @@ function ContactList({
       {contacts.map((contact) => (
         <li key={contact.id}>
           <div className="contact-list">
-            {isDeleteMode && (
+            {showCheckboxes && (
               <input
                 type="checkbox"
-                className={`checkbox ${isDeleteMode}? 'show' : ""`}
-                checked={selectedContacts.includes(contact.id)}
+                checked={contact.checked || false}
                 onChange={() => handleCheckboxChange(contact.id)}
               />
             )}
-            {contact.photo && (
-              <img
-                className="avatar"
-                src={contact.photo}
-                alt={`${contact.firstName} ${contact.lastName}`}
-              />
-            )}
-            {contact.firstName} {contact.lastName}
+            <div className="user-avatar">
+              {contact.photo && (
+                <img
+                  className="avatar"
+                  src={contact.photo}
+                  alt={`${contact.firstName} ${contact.lastName}`}
+                />
+              )}
+              {contact.firstName} {contact.lastName}
+            </div>
             <div>{contact.phone}</div>
             <div>{contact.email}</div>
             <div className="contact-actions">
@@ -45,7 +45,7 @@ function ContactList({
               </button>
               <button
                 className="delete-btn"
-                onClick={() => deleteContact(contact)}
+                onClick={() => deleteContact(contact.id)}
               >
                 Delete
               </button>
