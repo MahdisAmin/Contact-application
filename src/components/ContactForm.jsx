@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import "./ContactForm.css";
 
 function ContactForm({
@@ -62,7 +63,7 @@ function ContactForm({
     if (currentContact) {
       updateContact(contact);
     } else {
-      addContact({ ...contact, id: Math.random() });
+      addContact({ ...contact, id: uuidv4() });
     }
     setContact({
       firstName: "",

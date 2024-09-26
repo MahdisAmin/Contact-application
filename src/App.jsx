@@ -13,15 +13,12 @@ function AppContent() {
   const [currentContact, setCurrentContact] = useState(null);
   const [showCheckboxes, setShowCheckboxes] = useState(false);
 
-  const fetchContacts = () => {
+  useEffect(() => {
+    // Fetch contacts from JSON Server only once on component mount
     fetch("http://localhost:3000/contacts")
       .then((response) => response.json())
       .then((data) => dispatch({ type: "SET_CONTACTS", payload: data }))
-      .catch((error) => console.error("Error fetching contacts:", error));
-  };
-
-  useEffect(() => {
-    fetchContacts();
+      // .catch((error) => console.error("Error fetching contacts:", error));
   }, [dispatch]);
 
   const addContact = (contact) => {
@@ -33,10 +30,10 @@ function AppContent() {
       body: JSON.stringify(contact),
     })
       .then((response) => response.json())
-      .then(() => {
-        fetchContacts();
+      .then((data) => {
+        dispatch({ type: "ADD_CONTACT", payload: data });
       })
-      .catch((error) => console.error("Error adding contact:", error));
+      // .catch((error) => console.error("Error adding contact:", error));
   };
 
   const updateContact = (updatedContact) => {
@@ -48,10 +45,10 @@ function AppContent() {
       body: JSON.stringify(updatedContact),
     })
       .then((response) => response.json())
-      .then(() => {
-        fetchContacts();
+      .then((data) => {
+        dispatch({ type: "UPDATE_CONTACT", payload: data });
       })
-      .catch((error) => console.error("Error updating contact:", error));
+      // .catch((error) => console.error("Error updating contact:", error));
   };
 
   const deleteContact = (id) => {
@@ -59,13 +56,17 @@ function AppContent() {
       method: "DELETE",
     })
       .then(() => {
-        fetchContacts();
+        dispatch({ type: "DELETE_CONTACT", payload: id });
       })
-      .catch((error) => console.error("Error deleting contact:", error));
+      // .catch((error) => console.error("Error deleting contact:", error));
   };
 
   const deleteSelectedContacts = () => {
     const selectedContacts = contacts.filter((contact) => contact.checked);
+    if (selectedContacts.length === 0) {
+      alert("No contacts selected for deletion.");
+      return;
+    }
     const deletePromises = selectedContacts.map((contact) =>
       fetch(`http://localhost:3000/contacts/${contact.id}`, {
         method: "DELETE",
@@ -74,13 +75,15 @@ function AppContent() {
 
     Promise.all(deletePromises)
       .then(() => {
-        fetchContacts();
+        selectedContacts.forEach((contact) => {
+          dispatch({ type: "DELETE_CONTACT", payload: contact.id });
+        });
         setIsDeleteModalOpen(false);
         setShowCheckboxes(false);
       })
-      .catch((error) =>
-        console.error("Error deleting selected contacts:", error)
-      );
+      // .catch((error) =>
+      //   console.error("Error deleting selected contacts:", error)
+      // );
   };
 
   const handleDeleteButtonClick = () => {
@@ -97,9 +100,9 @@ function AppContent() {
 
   const filteredContacts = contacts.filter(
     (contact) =>
-      contact.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.email.toLowerCase().includes(searchTerm.toLowerCase())
+      contact?.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contact?.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contact?.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

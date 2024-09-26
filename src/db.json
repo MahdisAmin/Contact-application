@@ -1,13 +1,3 @@
 {
-  "contacts": [
-    {
-      "id": "0.12974228717866",
-      "firstName": "sarah",
-      "lastName": "motionen",
-      "phone": "09238796540",
-      "email": "wetwet@yahoo.com",
-      "photo": null,
-      "checked": false
-    }
-  ]
+  "contacts": []
 }

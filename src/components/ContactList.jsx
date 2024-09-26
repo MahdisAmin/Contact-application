@@ -16,6 +16,7 @@ function ContactList({
           <div className="contact-list">
             {showCheckboxes && (
               <input
+                className="checkbox "
                 type="checkbox"
                 checked={contact.checked || false}
                 onChange={() => handleCheckboxChange(contact.id)}

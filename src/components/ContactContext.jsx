@@ -33,16 +33,9 @@ export const ContactProvider = ({ children }) => {
       fetch("http://localhost:3000/contacts")
         .then((response) => response.json())
         .then((data) => dispatch({ type: "SET_CONTACTS", payload: data }))
-        .catch((error) => console.error("Error fetching contacts:", error));
+        // .catch((error) => console.error("Error fetching contacts:", error));
     };
-
-    // Initial fetch
     fetchContacts();
-
-    // Set interval to fetch contacts every 5 seconds
-    const intervalId = setInterval(fetchContacts, 5000);
-
-    return () => clearInterval(intervalId); // Cleanup interval on unmount
   }, [dispatch]);
 
   return (
