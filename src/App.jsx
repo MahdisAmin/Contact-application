@@ -16,13 +16,7 @@ function AppContent() {
   const [showCheckboxes, setShowCheckboxes] = useState(false);
   const [contactToDelete, setContactToDelete] = useState(null);
 
-  useEffect(() => {
-    // Fetch contacts from JSON Server only once on component mount
-    fetch("http://localhost:3000/contacts")
-      .then((response) => response.json())
-      .then((data) => dispatch({ type: "SET_CONTACTS", payload: data }))
-      .catch((error) => console.error("Error fetching contacts:", error));
-  }, [dispatch]);
+
 
   const addContact = (contact) => {
     fetch("http://localhost:3000/contacts", {
@@ -60,8 +54,8 @@ function AppContent() {
     })
       .then(() => {
         dispatch({ type: "DELETE_CONTACT", payload: id });
-        setContactToDelete(null); // Close the modal after deletion
-        setIsConfirmDeleteModalOpen(false); // Close the confirm delete modal
+        setContactToDelete(null); 
+        setIsConfirmDeleteModalOpen(false);
       })
       .catch((error) => console.error("Error deleting contact:", error));
   };
