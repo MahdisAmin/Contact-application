@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import ContactForm from "./components/ContactForm";
 import ContactList from "./components/ContactList";
 import SearchBar from "./components/SearchBar";
-import { ContactProvider, useContacts } from "./components/ContactContext";
 import "./App.css";
 
 function AppContent() {
-  const { contacts, dispatch } = useContacts();
+  const [contacts, setContacts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -16,48 +15,37 @@ function AppContent() {
   const [showCheckboxes, setShowCheckboxes] = useState(false);
   const [contactToDelete, setContactToDelete] = useState(null);
 
+  useEffect(() => {
+    const storedContacts = localStorage.getItem("contacts");
+    if (storedContacts) {
+      setContacts(JSON.parse(storedContacts));
+    }
+  }, []);
 
+  const saveContactsToLocalStorage = (contacts) => {
+    localStorage.setItem("contacts", JSON.stringify(contacts));
+  };
 
   const addContact = (contact) => {
-    fetch("http://localhost:3000/contacts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(contact),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        dispatch({ type: "ADD_CONTACT", payload: data });
-      })
-      .catch((error) => console.error("Error adding contact:", error));
+    const newContacts = [...contacts, contact];
+    setContacts(newContacts);
+    saveContactsToLocalStorage(newContacts);
   };
 
   const updateContact = (updatedContact) => {
-    fetch(`http://localhost:3000/contacts/${updatedContact.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedContact),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        dispatch({ type: "UPDATE_CONTACT", payload: data });
-      })
-      .catch((error) => console.error("Error updating contact:", error));
+    const newContacts = contacts.map((contact) =>
+      contact.id === updatedContact.id ? updatedContact : contact
+    );
+    setContacts(newContacts);
+    saveContactsToLocalStorage(newContacts);
   };
 
   const deleteContact = (id) => {
-    fetch(`http://localhost:3000/contacts/${id}`, {
-      method: "DELETE",
-    })
-      .then(() => {
-        dispatch({ type: "DELETE_CONTACT", payload: id });
-        setContactToDelete(null); 
-        setIsConfirmDeleteModalOpen(false);
-      })
-      .catch((error) => console.error("Error deleting contact:", error));
+    const newContacts = contacts.filter((contact) => contact.id !== id);
+    setContacts(newContacts);
+    saveContactsToLocalStorage(newContacts);
+    setContactToDelete(null); // Close the modal after deletion
+    setIsConfirmDeleteModalOpen(false); // Close the confirm delete modal
   };
 
   const confirmDeleteContact = (id) => {
@@ -71,23 +59,11 @@ function AppContent() {
       alert("No contacts selected for deletion.");
       return;
     }
-    const deletePromises = selectedContacts.map((contact) =>
-      fetch(`http://localhost:3000/contacts/${contact.id}`, {
-        method: "DELETE",
-      })
-    );
-
-    Promise.all(deletePromises)
-      .then(() => {
-        selectedContacts.forEach((contact) => {
-          dispatch({ type: "DELETE_CONTACT", payload: contact.id });
-        });
-        setIsDeleteModalOpen(false);
-        setShowCheckboxes(false);
-      })
-      .catch((error) =>
-        console.error("Error deleting selected contacts:", error)
-      );
+    const newContacts = contacts.filter((contact) => !contact.checked);
+    setContacts(newContacts);
+    saveContactsToLocalStorage(newContacts);
+    setIsDeleteModalOpen(false);
+    setShowCheckboxes(false);
   };
 
   const handleDeleteButtonClick = () => {
@@ -99,14 +75,18 @@ function AppContent() {
   };
 
   const handleCheckboxChange = (id) => {
-    dispatch({ type: "TOGGLE_CHECKBOX", payload: id });
+    const newContacts = contacts.map((contact) =>
+      contact.id === id ? { ...contact, checked: !contact.checked } : contact
+    );
+    setContacts(newContacts);
+    saveContactsToLocalStorage(newContacts);
   };
 
   const filteredContacts = contacts.filter(
     (contact) =>
-      contact?.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact?.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact?.email.toLowerCase().includes(searchTerm.toLowerCase())
+      contact.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contact.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contact.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -181,12 +161,4 @@ function AppContent() {
   );
 }
 
-function App() {
-  return (
-    <ContactProvider>
-      <AppContent />
-    </ContactProvider>
-  );
-}
-
-export default App;
+export default AppContent;
