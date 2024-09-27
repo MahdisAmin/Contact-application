@@ -10,15 +10,18 @@ function AppContent() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] =
+    useState(false);
   const [currentContact, setCurrentContact] = useState(null);
   const [showCheckboxes, setShowCheckboxes] = useState(false);
+  const [contactToDelete, setContactToDelete] = useState(null);
 
   useEffect(() => {
     // Fetch contacts from JSON Server only once on component mount
     fetch("http://localhost:3000/contacts")
       .then((response) => response.json())
       .then((data) => dispatch({ type: "SET_CONTACTS", payload: data }))
-      // .catch((error) => console.error("Error fetching contacts:", error));
+      .catch((error) => console.error("Error fetching contacts:", error));
   }, [dispatch]);
 
   const addContact = (contact) => {
@@ -33,7 +36,7 @@ function AppContent() {
       .then((data) => {
         dispatch({ type: "ADD_CONTACT", payload: data });
       })
-      // .catch((error) => console.error("Error adding contact:", error));
+      .catch((error) => console.error("Error adding contact:", error));
   };
 
   const updateContact = (updatedContact) => {
@@ -48,7 +51,7 @@ function AppContent() {
       .then((data) => {
         dispatch({ type: "UPDATE_CONTACT", payload: data });
       })
-      // .catch((error) => console.error("Error updating contact:", error));
+      .catch((error) => console.error("Error updating contact:", error));
   };
 
   const deleteContact = (id) => {
@@ -57,8 +60,15 @@ function AppContent() {
     })
       .then(() => {
         dispatch({ type: "DELETE_CONTACT", payload: id });
+        setContactToDelete(null); // Close the modal after deletion
+        setIsConfirmDeleteModalOpen(false); // Close the confirm delete modal
       })
-      // .catch((error) => console.error("Error deleting contact:", error));
+      .catch((error) => console.error("Error deleting contact:", error));
+  };
+
+  const confirmDeleteContact = (id) => {
+    setContactToDelete(id);
+    setIsConfirmDeleteModalOpen(true);
   };
 
   const deleteSelectedContacts = () => {
@@ -81,9 +91,9 @@ function AppContent() {
         setIsDeleteModalOpen(false);
         setShowCheckboxes(false);
       })
-      // .catch((error) =>
-      //   console.error("Error deleting selected contacts:", error)
-      // );
+      .catch((error) =>
+        console.error("Error deleting selected contacts:", error)
+      );
   };
 
   const handleDeleteButtonClick = () => {
@@ -148,10 +158,27 @@ function AppContent() {
           </div>
         </div>
       )}
+      {isConfirmDeleteModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span
+              className="close"
+              onClick={() => setIsConfirmDeleteModalOpen(false)}
+            >
+              ×
+            </span>
+            <p>Are you sure you want to delete this contact?</p>
+            <button onClick={() => deleteContact(contactToDelete)}>Yes</button>
+            <button onClick={() => setIsConfirmDeleteModalOpen(false)}>
+              No
+            </button>
+          </div>
+        </div>
+      )}
       <ContactList
         contacts={filteredContacts}
         setCurrentContact={setCurrentContact}
-        deleteContact={deleteContact}
+        confirmDeleteContact={confirmDeleteContact}
         openEditModal={() => setIsEditModalOpen(true)}
         showCheckboxes={showCheckboxes}
         handleCheckboxChange={handleCheckboxChange}

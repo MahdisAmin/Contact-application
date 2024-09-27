@@ -33,7 +33,7 @@ export const ContactProvider = ({ children }) => {
       fetch("http://localhost:3000/contacts")
         .then((response) => response.json())
         .then((data) => dispatch({ type: "SET_CONTACTS", payload: data }))
-        // .catch((error) => console.error("Error fetching contacts:", error));
+        .catch((error) => console.error("Error fetching contacts:", error));
     };
     fetchContacts();
   }, [dispatch]);

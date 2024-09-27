@@ -4,7 +4,7 @@ import "./ContactList.css";
 function ContactList({
   contacts,
   setCurrentContact,
-  deleteContact,
+  confirmDeleteContact,
   openEditModal,
   showCheckboxes,
   handleCheckboxChange,
@@ -15,8 +15,7 @@ function ContactList({
         <li key={contact.id}>
           <div className="contact-list">
             {showCheckboxes && (
-              <input
-                className="checkbox "
+              <input className="checkbox"
                 type="checkbox"
                 checked={contact.checked || false}
                 onChange={() => handleCheckboxChange(contact.id)}
@@ -46,7 +45,7 @@ function ContactList({
               </button>
               <button
                 className="delete-btn"
-                onClick={() => deleteContact(contact.id)}
+                onClick={() => confirmDeleteContact(contact.id)}
               >
                 Delete
               </button>
